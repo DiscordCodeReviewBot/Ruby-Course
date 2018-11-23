@@ -1,64 +1,171 @@
-require "sqlite"
-
-
+require "date"
 class CdDisk
-  attr_reader :title, :artists, :songs_list, :borrowed_to, :cd_id
+  attr_reader :title, :artist, :songs_list, :borrowed_to, :cd_id, :return_date
 
-  def initialize(cd_id, title, artists, songs_list, borrowed_to=nil, return_date=nil )
+  def initialize(cd_id, title, artist, songs_list)
     @cd_id = cd_id
     @title = title
-    @artists = artists
+    @artist = artist
     @songs_list = songs_list
-    @borrowed_to = borrowed_to
-    @return_date = return_date
+    @borrowed_to="Nobody"
+    @return_date = "Not Borrowed"
   end
+
   def to_s
-    @cd_id
+    "ID: " + @cd_id + " title: " + @title + " artist: " + @artist + " songs: " + @songs_list + " borrowed to: " + borrowed_to + " return date: " + @return_date.to_s + "\n"
   end
+
   def lend(person_name, year, month, day)
     @borrowed_to = person_name
     @return_date = Date.new(year, month, day)
   end
 
   def return_to_owner
-    @borrowed_to = nil
-  end
-
-  def can_be_borrowed
-    if @borrowed_to == nil
-      true
-    else
-      false
-    end
+    @borrowed_to = "Nobody"
+    @return_date = "Not Borrowed" 
   end
 
   def check_return_date
-    if @return_date == nil
+    if @return_date == "Not Borrowed"
       false
-    end
-    if Date.parse(@return_date) > Date.today
-      true
+    elsif @return_date < Date.today
+	puts "ID: " + @cd_id + " title: " + @title + " artist: " + @artist + " songs: " + @songs_list + " borrowed to: " + borrowed_to + " return date: " + @return_date.to_s + "\n"
     else
       false
     end
   end
 end
 
-class DatabaseManager
+class Album
+	attr_reader :all_cds
+	def initialize
+		@all_cds = []
+	end
 
-  def initialize(database, user, password)
-    begin
-      @con = PG.connect :dbname => database, :user => user, :password => password
-      rescue PG::ConnectionBad => e
-      puts "DATABASE DOES NOT EXIST"
-    end
-  end
+	def to_s
+		s=""
+		@all_cds.each do |cd|
+			s = s + cd.to_s
+		end
+		s
+		
+	end
+	def add_cd(cd)
+		@all_cds.push(cd)	
+	end
 
-  def create_tables
-    @con.exec "CREATE TABLE CDS(id INTEGER PRIMARY KEY,
-        Title VARCHAR(30), Price INT)"
-  end
+	def remove_cd(id)
+		@all_cds.each do |cd|
+			if cd.cd_id == id.to_s
+				@all_cds.delete(cd)
+			end		
+		end
+	end
 
+	
 end
 
-db = DatabaseManager.new("cds", "postgres", 1234)
+def serialize(album)
+	File.open("data.txt","wb") do |file|
+		Marshal.dump(album,file)
+	end
+end
+
+
+
+
+
+if !File.file?("data.txt")
+	album = Album.new
+else
+	album = nil
+	File.open("data.txt","rb") {|f| album = Marshal.load(f)}
+end
+
+while true
+	puts
+	print "quit[0], add album[1], remove album[2], lend album[3], check for an overdue[4], show cd info[5], return to owner[6]: "
+	action = gets.chomp
+	puts
+	if action == "0"
+		break	
+	end
+	if action == "1"
+		print "id: "
+		id = gets.chomp.to_str
+		print "title: "
+		title = gets.chomp
+		print "artist: "
+		artist = gets.chomp
+		print "songs: "
+		songs = gets.chomp.to_s
+		my_cd = CdDisk.new(id, title, artist, songs)
+		album.add_cd(my_cd)
+	end
+	
+	if action == "2"
+		print "id: "
+		id = gets.chomp.to_str
+		album.all_cds.each do |cd|
+			album.remove_cd(id)
+		end
+	end
+
+
+	if action == "3"
+		print "id: "
+		id = gets.chomp.to_str
+		print "Name: "
+		name = gets.chomp
+		print "year: "
+		year = gets.chomp.to_i
+		print "month: "
+		month = gets.chomp.to_i
+		print "day: "
+		day = gets.chomp.to_i
+
+		album.all_cds.each do |cd|
+			if cd.cd_id == id
+				cd.lend(name,year,month,day)			
+			end
+		end
+	end
+
+	if action == "4"
+		puts "overdue cds:"
+		album.all_cds.each do |cd|
+			cd.check_return_date
+		end
+	end
+
+	if action == "5"
+		print "cd id / all: "
+		id = gets.chomp.to_str
+		puts
+		if id == "all"
+			puts album.all_cds	
+
+		else
+			album.all_cds.each do |cd|
+				if cd.cd_id == id
+					puts cd
+				end
+			end	
+		end
+		
+		
+	end
+
+	if action == "6"
+		print "id: "
+		id = gets.chomp.to_s
+		print
+		album.all_cds.each do |cd|
+			if cd.cd_id == id
+				cd.return_to_owner			
+			end
+		end
+	end
+	serialize(album)
+end
+
