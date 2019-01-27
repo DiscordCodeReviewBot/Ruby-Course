@@ -2,14 +2,7 @@ require 'selenium-webdriver'
 require './homePage'
 require './getData'
 require 'tk'
-
-
-def serialize(data)
-  File.open("data.txt","wb") do |file|
-    Marshal.dump(data,file)
-  end
-end
-
+require './createGraphs'
 
 class MyGUI
   def initialize
@@ -27,9 +20,11 @@ class MyGUI
     new_graph = TkMenu.new(menu)
 
     menu.add('cascade', :menu => new_graph, :label => 'New Graph')
-    new_graph.add('command', :label => 'EUR -> USD',
+    new_graph.add('command', :label => 'Enter Graph Range ',
+                  :command => proc { new_background})
+    new_graph.add('command',:state =>"disabled", :label => 'EUR -> USD',
             :command => proc { create_and_update_graph })
-    new_graph.add('command', :label => 'PLN -> USD',
+    new_graph.add('command',:state =>"disabled", :label => 'PLN -> USD',
             :command => proc { create_and_update_graph})
 
     @root.menu(menu)
