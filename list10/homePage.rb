@@ -45,11 +45,11 @@ class HomePage
   end
 
   def choose_start_year
-
+    @driver.find_element(:xpath, @star_year).click
   end
 
   def choose_start_month
-
+    @driver.find_element(:xpath, @star_month).click
   end
 
   def choose_start_day
@@ -57,11 +57,11 @@ class HomePage
   end
 
   def choose_end_year
-
+    @driver.find_element(:xpath, @end_year).click
   end
 
   def choose_end_month
-
+    @driver.find_element(:xpath, @end_month).click
   end
 
   def choose_end_day
