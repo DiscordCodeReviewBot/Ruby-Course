@@ -5,14 +5,16 @@ require './getData'
 class GraphCreator
 
   def initialize
-    @date_1 = nil
-    @date_2 = nil
+    @date_1 = '15-08-1996'
+    @date_2 = '01-01-2019'
     @date_1_day = nil
     @date_1_month = nil
     @date_1_year = nil
     @date_2_day = nil
     @date_2_month = nil
     @date_2_year = nil
+
+    @data_array = nil
   end
 
   def set_date(date_1, date_2)
@@ -21,6 +23,13 @@ class GraphCreator
   end
 
   def parse_date
+    @date_1_day = @date_1[0,2]
+    @date_1_month = @date_1[3] + @date_1[4]
+    @date_1_year = @date_1[6]+@date_1[7]+@date_1[8]+@date_1[9]
+
+    @date_2_day = @date_2[0,2]
+    @date_2_month = @date_2[3] + @date_2[4]
+    @date_2_year = @date_2[6]+@date_2[7]+@date_2[8]+@date_2[9]
 
   end
 
@@ -30,7 +39,8 @@ class GraphCreator
 
 end
 
-
+graph_craator = GraphCreator.new
+graph_craator.parse_date
 
 
 

@@ -1,3 +1,5 @@
+require 'selenium-webdriver'
+require './homePage'
 class GetData
 
   def initialize
@@ -16,9 +18,11 @@ class GetData
     @homepage.click_reporting_period
     @homepage.choose_date_range
     @homepage.retrieve_data
-    sleep(5)
+    sleep(15)
     prices = @homepage.get_all_prices
     puts(prices)
   end
 end
 
+get_data = GetData.new
+get_data.collect_data("pln")
