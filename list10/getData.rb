@@ -1,12 +1,10 @@
-require 'selenium-webdriver'
-require './homePage'
-
 class GetData
 
   def initialize
     @driver = Selenium::WebDriver.for :chrome
     @homepage = HomePage.new(@driver)
   end
+
   def collect_data(currency)
     @homepage.open_page
     @homepage.click_curency_button
@@ -22,8 +20,5 @@ class GetData
     prices = @homepage.get_all_prices
     puts(prices)
   end
-
 end
 
-xd = GetData.new
-xd.collect_data("pln")

@@ -1,5 +1,3 @@
-require "selenium-webdriver"
-
 class HomePage
 
   def initialize(driver)
@@ -34,6 +32,7 @@ class HomePage
   def click_reporting_period
       @driver.find_element(:xpath, @reporting_period_xpath).click
   end
+
   def choose_date_range
       @driver.find_element(:xpath, @date_range_xpath).click
   end
