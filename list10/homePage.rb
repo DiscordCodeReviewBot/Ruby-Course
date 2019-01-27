@@ -46,15 +46,3 @@ class HomePage
       @driver.find_elements(:class, "historical-rates--table--rate")
   end
 end
-
-
-home = HomePage.new(Selenium::WebDriver.for :chrome)
-home.open_page
-home.click_curency_button
-home.choose_pln
-home.click_reporting_period
-home.choose_date_range
-home.retrieve_data
-sleep(5)
-prices = home.get_all_prices
-puts(prices)
