@@ -23,18 +23,18 @@ class HomePage
     @end_month = "/html[1]/body[1]/div[1]/main[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/select[2]"
     @months_dict =
         {
-            "01" => "j"
-            "02" => "f"
-            "03" => "m"
-            "04" => "a"
-            "05" => "mm"
-            "06" => "jj"
-            "07" => "jjj"
-            "08" => "aa"
-            "09" => "s"
-            "10" => "o"
-            "11" => "n"
-            "12" => "d"
+            "01" => "j",
+            "02" => "f",
+            "03" => "m",
+            "04" => "a",
+            "05" => "mm",
+            "06" => "jj",
+            "07" => "jjj",
+            "08" => "aa",
+            "09" => "s",
+            "10" => "o",
+            "11" => "n",
+            "12" => "d",
         }
   end
 
@@ -76,29 +76,42 @@ class HomePage
   end
 
   def choose_start_month(month)
-    @driver.find_element(:xpath, @star_month).click
+    @driver.find_element(:xpath, @start_month).click
+    @driver.find_element(:xpath, @start_month).send_keys(@months_dict[month]+"\n")
   end
 
-  def choose_start_day
-
+  def choose_start_day(day)
+    if day[0] == "0"
+      day = day[1,2]
+    end
+    element = @driver.find_elements(:xpath, "//div[@role = 'gridcell']").select {|el| el.text == day}.first
+    element.click
   end
 
-  def choose_end_year
+  def choose_end_year(year)
     @driver.find_element(:xpath, @end_year).click
+    @driver.find_element(:xpath, @end_year).send_keys(year+"\n")
   end
 
-  def choose_end_month
+  def choose_end_month(month)
     @driver.find_element(:xpath, @end_month).click
+    @driver.find_element(:xpath, @end_month).send_keys(@months_dict[month]+"\n")
   end
 
-  def choose_end_day
-
+  def choose_end_day(day)
+    if day[0] == "0"
+      day = day[1,2]
+      print(day)
+    end
+    element = @driver.find_elements(:xpath, "//div[@role = 'gridcell']").select {|el| el.text == day}.first
+    element.click
   end
   def retrieve_data
       @driver.find_element(:xpath, @retrieve_data_xpath).click
   end
 
   def get_all_prices
-      @driver.find_elements(:class, "historical-rates--table--rate")
+    prices = @driver.find_elements(:class, "historical-rates--table--rate")
+    prices
   end
 end
