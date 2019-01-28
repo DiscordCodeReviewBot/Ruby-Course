@@ -6,6 +6,7 @@ require "gchart"
 
 class GraphCreator
 
+  # Initializes nill values to update later
   def initialize
     @get_data_object = nil
     @currency_data = nil
@@ -23,11 +24,16 @@ class GraphCreator
     @data_array = nil
   end
 
+  # Set date instance variables taken from entry labels
+  # Params:
+  # +date_1+:: Begin date
+  # +date_2+:: End date
   def set_date(date_1, date_2)
     @date_1 = date_1
     @date_2 = date_2
   end
 
+  # Splits date to year month day
   def parse_date
     @date_1_day = @date_1[0,2]
     @date_1_month = @date_1[3] + @date_1[4]
@@ -38,11 +44,22 @@ class GraphCreator
     @date_2_year = @date_2[6]+@date_2[7]+@date_2[8]+@date_2[9]
   end
 
+  # Retreives data from webpage
+  # Params:
+  # +currency+:: PLN/EUR - currency used to drwa charts
+  # +start_year+:: start year for date range
+  # +start_month+:: start month for date range
+  # +start_day+:: start day for date range
+  # +end_year+:: end year for date range
+  # +end_month+:: end month for date range
+  # +end_day+:: end day for date range
   def get_data(currency, start_year, start_month, start_day, end_year, end_month, end_day)
     @currency_data = @get_data_object.collect_data(currency, start_year, start_month, start_day, end_year, end_month, end_day)
     @currency_data.shift
   end
 
+  # creates graphs in png format
+  # +currency+:: PLN/EUR - currency used to drwa charts
   def create_graph(currency)
     parse_date
     @get_data_object = GetData.new
@@ -53,7 +70,10 @@ class GraphCreator
     create_graph_gchart(@currency_data_parsed, currency)
     @get_data_object.quit_driver
   end
-
+  # Draw charts using google charts
+  # Params:
+  # +data+:: Currency data
+  # +currency+:: PLN/EUR - currency used to drwa charts
   def create_graph_gchart(data,currency)
     Gchart.line(:title => currency.upcase+">USD",
                 :data => data,
@@ -61,26 +81,5 @@ class GraphCreator
                 :min_value=>data.min-data.min*0.02,
                 :size =>"500x500",
                 :format => 'file')
-  end
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def serialize(data)
-  File.open("data.txt","wb") do |file|
-    Marshal.dump(data,file)
   end
 end

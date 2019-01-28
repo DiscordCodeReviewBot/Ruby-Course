@@ -1,10 +1,22 @@
 class GetData
 
+  # Initialize webdriver and add options
   def initialize
-    @driver = Selenium::WebDriver.for :chrome
+    options = Selenium::WebDriver::Chrome::Options.new
+    #options.add_argument('--headless')
+    @driver = Selenium::WebDriver.for :chrome, options: options
     @homepage = HomePage.new(@driver)
   end
 
+  # Collects data for charts
+  # Params:
+  # +currency+:: PLN/EUR - currency used to drwa charts
+  # +start_year+:: start year for date range
+  # +start_month+:: start month for date range
+  # +start_day+:: start day for date range
+  # +end_year+:: end year for date range
+  # +end_month+:: end month for date range
+  # +end_day+:: end day for date range
   def collect_data(currency, start_year, start_month, start_day, end_year, end_month, end_day)
     @homepage.open_page
     @homepage.click_curency_button
@@ -35,6 +47,7 @@ class GetData
     sleep(7)
     @homepage.get_all_prices
   end
+  # Closes webdriver
   def quit_driver
     @driver.quit
   end

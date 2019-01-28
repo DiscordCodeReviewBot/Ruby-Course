@@ -3,10 +3,11 @@ require './homePage'
 require './getData'
 require 'tk'
 require './createGraphs'
-#require 'rmagick'
-#Magick::ImageList.new('https://i.giphy.com/zlLydol7ndM7C.gif')
+require 'thread'
 
 class MyGUI
+
+  # Initialize Gui
   def initialize
     @graph_creator = GraphCreator.new
     @root = TkRoot.new
@@ -19,16 +20,17 @@ class MyGUI
 
     @menu.add('cascade', :menu => @new_graph, :label => 'New Graph')
     @new_graph.add('command', :label => 'Enter Graph Range ',
-                  :command => proc { add_date_range})
+                   :command => proc { add_date_range})
     @new_graph.add('command',:state =>"normal", :label => 'EUR -> USD',
-            :command => proc { eur_graph })
+                   :command => proc { eur_graph })
     @new_graph.add('command',:state =>"normal", :label => 'PLN -> USD',
-            :command => proc { pln_graph})
+                   :command => proc { pln_graph})
 
     @root.menu(@menu)
     Tk.mainloop
   end
 
+  # Creates window for submiting date range
   def add_date_range
     @date_window = TkToplevel.new
     @date_window.title = "Date Range"
@@ -47,6 +49,7 @@ class MyGUI
     @submit_button.grid
   end
 
+  # Submits date taken from entry labels
   def submit_date_range
     date_1 = @first_entry.get
     date_2 = @second_entry.get
@@ -54,6 +57,7 @@ class MyGUI
     @graph_creator.set_date(date_1, date_2)
   end
 
+  # Changes Chart Image
   def new_background(name)
     image = TkPhotoImage.new
     image.file = name
@@ -62,11 +66,13 @@ class MyGUI
     label.place('x' => 25, 'y' => 25)
   end
 
+  # Creates EUR>USD GRAPH
   def eur_graph
     @graph_creator.create_graph("eur")
     new_background("chart.png")
   end
 
+  # Creates PLN>USD GRAPH
   def pln_graph
     @graph_creator.create_graph("pln")
     new_background("chart.png")
