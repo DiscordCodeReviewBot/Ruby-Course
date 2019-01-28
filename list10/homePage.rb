@@ -1,4 +1,3 @@
-
 class HomePage
 
   def initialize(driver)
@@ -107,11 +106,10 @@ class HomePage
     element.click
   end
   def retrieve_data
-      @driver.find_element(:xpath, @retrieve_data_xpath).click
+    @driver.find_element(:xpath, @retrieve_data_xpath).click
   end
 
   def get_all_prices
-    prices = @driver.find_elements(:class, "historical-rates--table--rate")
-    prices
+    @driver.find_elements(:class, "historical-rates--table--rate")
   end
 end

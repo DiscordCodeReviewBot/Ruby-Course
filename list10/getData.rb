@@ -1,5 +1,3 @@
-require 'selenium-webdriver'
-require './homePage'
 class GetData
 
   def initialize
@@ -35,9 +33,9 @@ class GetData
     sleep(1)
     @homepage.retrieve_data
     sleep(4)
-    prices = @homepage.get_all_prices
+    @homepage.get_all_prices
+  end
+  def quit_driver
+    @driver.quit
   end
 end
-
-get_data = GetData.new
-get_data.collect_data("pln", "1999", "07", "01", "2019", "01","21")

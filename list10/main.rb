@@ -3,6 +3,8 @@ require './homePage'
 require './getData'
 require 'tk'
 require './createGraphs'
+#require 'rmagick'
+#Magick::ImageList.new('https://i.giphy.com/zlLydol7ndM7C.gif')
 
 class MyGUI
   def initialize
@@ -19,9 +21,9 @@ class MyGUI
     @new_graph.add('command', :label => 'Enter Graph Range ',
                   :command => proc { add_date_range})
     @new_graph.add('command',:state =>"normal", :label => 'EUR -> USD',
-            :command => proc { create_and_update_graph })
+            :command => proc { eur_graph })
     @new_graph.add('command',:state =>"normal", :label => 'PLN -> USD',
-            :command => proc { create_and_update_graph})
+            :command => proc { pln_graph})
 
     @root.menu(@menu)
     Tk.mainloop
@@ -52,9 +54,9 @@ class MyGUI
     @graph_creator.set_date(date_1, date_2)
   end
 
-  def new_background
+  def new_background(name)
     image = TkPhotoImage.new
-    image.file = "image.png"
+    image.file = name
     label = TkLabel.new(@root)
     label.image = image
     label.place('x' => 0, 'y' => 0)
