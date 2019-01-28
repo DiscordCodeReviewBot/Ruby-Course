@@ -32,7 +32,7 @@ class GetData
     @homepage.choose_end_day(end_day)
     sleep(1)
     @homepage.retrieve_data
-    sleep(4)
+    sleep(7)
     @homepage.get_all_prices
   end
   def quit_driver

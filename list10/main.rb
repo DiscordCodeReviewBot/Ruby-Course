@@ -11,8 +11,8 @@ class MyGUI
     @graph_creator = GraphCreator.new
     @root = TkRoot.new
     @root.title = "Currency Charts"
-    @root.height = 500
-    @root.width = 800
+    @root.height = 550
+    @root.width = 550
 
     @menu = TkMenu.new
     @new_graph = TkMenu.new(@menu)
@@ -59,7 +59,7 @@ class MyGUI
     image.file = name
     label = TkLabel.new(@root)
     label.image = image
-    label.place('x' => 0, 'y' => 0)
+    label.place('x' => 25, 'y' => 25)
   end
 
   def eur_graph

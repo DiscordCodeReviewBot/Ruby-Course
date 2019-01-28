@@ -50,15 +50,17 @@ class GraphCreator
     @currency_data.each do |el|
       @currency_data_parsed.push(el.text.to_f)
     end
-    @currency_data.each do |el|
-      puts el
-    end
     create_graph_gchart(@currency_data_parsed, currency)
     @get_data_object.quit_driver
   end
 
   def create_graph_gchart(data,currency)
-    Gchart.line(:title => currency.upcase+">USD",:data => data,:axis_with_labels => 'y',:min_value=>data.min, :size =>"800x500", :format => 'file')
+    Gchart.line(:title => currency.upcase+">USD",
+                :data => data,
+                :axis_with_labels => 'y',
+                :min_value=>data.min-data.min*0.02,
+                :size =>"500x500",
+                :format => 'file')
   end
 end
 
