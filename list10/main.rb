@@ -14,6 +14,8 @@ class MyGUI
     @root.title = "Currency Charts"
     @root.height = 550
     @root.width = 550
+    @root.minsize(550,550)
+    @root.maxsize(550,550)
 
     @menu = TkMenu.new
     @new_graph = TkMenu.new(@menu)
