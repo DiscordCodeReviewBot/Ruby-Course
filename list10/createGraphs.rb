@@ -1,13 +1,15 @@
 require './getData'
 require 'selenium-webdriver'
 require './homePage'
-
+require 'googlecharts'
+require "gchart"
 
 class GraphCreator
 
   def initialize
     @get_data_object = nil
     @currency_data = nil
+    @currency_data_parsed = []
 
     @date_1 = nil
     @date_2 = nil
@@ -37,28 +39,28 @@ class GraphCreator
   end
 
   def get_data(currency, start_year, start_month, start_day, end_year, end_month, end_day)
-    @get_data_object = GetData.new
     @currency_data = @get_data_object.collect_data(currency, start_year, start_month, start_day, end_year, end_month, end_day)
     @currency_data.shift
   end
 
   def create_graph(currency)
     parse_date
-    #get_data(currency, @date_1_year, @date_1_month, @date_1_day, @date_2_year, @date_2_month, @date_2_day)
-    create_graph_python
+    @get_data_object = GetData.new
+    get_data(currency, @date_1_year, @date_1_month, @date_1_day, @date_2_year, @date_2_month, @date_2_day)
+    @currency_data.each do |el|
+      @currency_data_parsed.push(el.text.to_f)
+    end
+    @currency_data.each do |el|
+      puts el
+    end
+    create_graph_gchart(@currency_data_parsed, currency)
+    @get_data_object.quit_driver
   end
 
-  def create_graph_python
-    exec "python script.py"
-    puts "xd"
+  def create_graph_gchart(data,currency)
+    Gchart.line(:title => currency.upcase+">USD",:data => data,:axis_with_labels => 'y',:min_value=>data.min, :size =>"800x500", :format => 'file')
   end
 end
-
-#=begin
-a = GraphCreator.new
-a.create_graph_python
-#=end
-
 
 
 

@@ -64,10 +64,12 @@ class MyGUI
 
   def eur_graph
     @graph_creator.create_graph("eur")
+    new_background("chart.png")
   end
 
   def pln_graph
     @graph_creator.create_graph("pln")
+    new_background("chart.png")
   end
 
 end
