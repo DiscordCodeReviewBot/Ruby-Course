@@ -32,11 +32,11 @@ class SudokuSolverBot
         end
 
         if @number.scan(/\D/).empty?
-          self.dont_click_list.append(i.to_s + j.to_s)
+          @dont_click_list.append(i.to_s + j.to_s)
         else
           @number = "-"
         end
-        @solver.add_to_board(j, i, self.number)
+        @solver.add_to_board(j, i, @number)
       end
     end
   end
@@ -57,18 +57,18 @@ class SudokuSolverBot
     for i in 0...9
       for j in 0...9
         if not @dont_click_list.include?(j.to_s + i.to_s)
-          @driver.find_element(:css, "#M{}".format(self.solver.board[i][j])).click
+          @driver.find_element(:css, "#M"+@solver.board[i][j].to_s).click
         end
         sleep(0.08)
-        driver.find_element(:css, "#M{}".format(self.solver.board[i][j])).click
-        sleep(0.08)
-        fill_focus(self.driver.find_elemen(:xpath, "//div[@id='vc_{}_{}']".format(j, i)))
+        @driver.find_element(:css, "#M"+@solver.board[i][j].to_s).click
+        sleep(0.08)     # "//div[@id='vc_{}_{}']".format(j, i))
+        fill_focus(@driver.find_element(:xpath, "//div[@id='vc_"+j.to_s+"_"+i.to_s+"']"))
       end
     end
   end
 
   def solve_loop(number_of_solutions)
-    for i in 0...number_of_solutions
+    for i in 0..number_of_solutions
       sleep(1)  # solving MaxRetriesException
       begin
         @driver.find_element(:xpath, "//div[@id='g4']").click  # very hard difficulty
@@ -82,11 +82,12 @@ class SudokuSolverBot
       @dont_click_list = []  # reseting list
       #print("{} Etap II".format(self.username))
       sleep(3)  # without this line sometimes program gets wrong board, how to solve?
-      @get_board_info
+      get_board_info
       #print("{} Etap III".format(self.username))
       @solver.solve
+      puts @solver.board
       #print("{} Etap IV".format(self.username))
-      @fill_blank_spaces
+      fill_blank_spaces
       #print("{} Etap V".format(self.username))
       sleep(5)  # waiting until score updates (can do this by constantly checking score)
       #print("Bot {} completed task".format(self.username))
