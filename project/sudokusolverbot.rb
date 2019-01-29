@@ -1,5 +1,5 @@
 require 'selenium-webdriver'
-require './sudokusolverbot'
+require './sudokusolver'
 
 class SudokuSolverBot
 
@@ -71,9 +71,10 @@ class SudokuSolverBot
     for i in 0...number_of_solutions
       sleep(1)  # solving MaxRetriesException
       begin
-        self.driver.find_element(:xpath, "//div[@id='g4']").click  # very hard difficulty
+        @driver.find_element(:xpath, "//div[@id='g4']").click  # very hard difficulty
       rescue "MaxRetriesException"  # solving MaxRetriesException
-        print("Bot {} łączy się ponownie". format(self.username))
+        #print("Bot {} łączy się ponownie". format(@username))
+        nil
       end
       sleep(5)
       @driver.find_element(:xpath, "//div[@id='g4']").click
@@ -91,5 +92,4 @@ class SudokuSolverBot
       #print("Bot {} completed task".format(self.username))
     end
   end
-
 end

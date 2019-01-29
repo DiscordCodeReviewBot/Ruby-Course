@@ -46,9 +46,9 @@ class SudokuSolver
   end
 
   def find_next_not_aasigned
-      for i in range(9)
-        for j in range(9)
-          if self.board[i][j] == "-"
+      for i in 0...9
+        for j in 0...9
+          if @board[i][j] == "-"
                [i, j]
           else
             false
@@ -64,7 +64,7 @@ class SudokuSolver
 
     x_y_pair = find_next_not_aasigned
 
-    for number in range(1, 10)
+   for number in 1...10
       if is_safe(x_y_pair[0], x_y_pair[1], number) == true
         @board[x_y_pair[0]][x_y_pair[1]] = number
       end
