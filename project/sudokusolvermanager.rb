@@ -1,10 +1,12 @@
 require "./sudokusolverbot"
+require 'thread'
 
 class Manager
 
   def initialize
     @bots_data = [
         ['binq', 'marcin1234'],
+        ['binq661', 'fyq6hr84']
     ]
     @bots_list = []
 
@@ -24,7 +26,7 @@ class Manager
 
   def bot_manager_start(number_of_solutions)
     for i in 0...@bots_data.length
-      start_bot(i, number_of_solutions)
+      Thread.new(start_bot(i, number_of_solutions))
     end
   end
 end
