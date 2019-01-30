@@ -4,8 +4,10 @@ require "./informationManager"
 require 'thread'
 require "mini_magick"
 
+# Class used to create GUI - adding buttons and commands to them
 class MyGui
 
+  # Initialize main window
   def initialize
     @info_manager = create_information_manager
     Thread.new{new_background}
@@ -21,7 +23,7 @@ class MyGui
 
     @menu_start.add('cascade', :menu => @start, :label => 'Start')
     @start.add('command', :label => 'New Game',
-                  :command => proc { Thread.new{start_manager(@info_manager.accounts, 3)}})
+                  :command => proc { how_many_games_gui})
     @start.add('command', :label => 'Add New User',
                :command => proc { add_new_user_create_gui})
     @start.add('command', :label => 'Delete User',
@@ -31,11 +33,11 @@ class MyGui
     Tk.mainloop
   end
 
+  # Change main window background to screenshot from game
   def new_background
     a = 10
     while true
       if a&10 == 0
-        puts"zmiana"
         image = MiniMagick::Image.open("screenshot.png")
         image.resize "800x500"
         image.format "png"
@@ -52,6 +54,30 @@ class MyGui
 
   end
 
+  # Creates new winndow to get information about number of games
+  def how_many_games_gui
+    @how_many_games_window = TkToplevel.new
+    @how_many_games_window.title = "How many games?"
+
+    @first_entry = TkEntry.new(@how_many_games_window)
+    @first_entry.width = 30
+    @first_entry.insert '0', "How many games?"
+    @submit_button = TkButton.new(@how_many_games_window)
+    @submit_button.text = "Submit"
+    @submit_button.command = proc {submit_how_many_games}
+    @first_entry.grid
+    @submit_button.grid
+  end
+
+  # Invokes submit function for submit button in how_many_games_window
+  def submit_how_many_games
+    count = @first_entry.get
+    @how_many_games_window.destroy
+    Thread.new{start_manager(@info_manager.accounts, count.to_i)}
+  end
+  # Thread.new{start_manager(@info_manager.accounts, 3)}
+
+  # Creates new winndow to get information about user who needs to be added
   def add_new_user_create_gui
     @new_user_window = TkToplevel.new
     @new_user_window.title = "Add New User"
@@ -60,6 +86,7 @@ class MyGui
     @first_entry.width = 30
     @first_entry.insert '0', "Username"
     @second_entry = TkEntry.new(@new_user_window)
+    @second_entry.show = "*"
     @second_entry.width = 30
     @second_entry.insert '0', "password"
     @submit_button = TkButton.new(@new_user_window)
@@ -70,6 +97,7 @@ class MyGui
     @submit_button.grid
   end
 
+  # Creates new winndow to get information about user who needs to be deleted
   def delete_user_create_gui
     @delete_user_window = TkToplevel.new
     @delete_user_window.title = "Delete User"
@@ -84,13 +112,14 @@ class MyGui
     @submit_button.grid
   end
 
+  # Invokes submit function for submit button in delete_user_window
   def submit_delete_user
     username = @first_entry.get
     @delete_user_window.destroy
     @info_manager.delete_user(username)
     serialize(@info_manager)
   end
-
+  # Invokes submit function for submit button in add_new_user_window
   def submit_new_user
     username = @first_entry.get
     password = @second_entry.get

@@ -1,7 +1,13 @@
 require 'selenium-webdriver'
 
+# Class which creates actual bots and is used to perform actions on browser
 class SudokuSolverBot
   attr_reader :driver
+
+  # Initialize Bot
+  # Params
+  # +username+:: bots username
+  # +password+:: bots password
   def initialize(username, password)
     options = Selenium::WebDriver::Chrome::Options.new
     #options.add_argument('--headless')
@@ -15,6 +21,7 @@ class SudokuSolverBot
     @number = 0  # we use this to get board info
   end
 
+  # log in to page
   def log_in
     @driver.get("https://www.sudokukingdom.com//index.php")
     @driver.find_element(:xpath, "//a[contains(text(),'Log In')]").click
@@ -23,10 +30,16 @@ class SudokuSolverBot
     @driver.find_element(:xpath,"//input[@value='Log In']").click
   end
 
+  # Adds number to board
+  # Params
+  # +column+:: column number
+  # +row+:: row number
+  # +number+:: number to add
   def add_to_board(column, row, number)
     @board[column][row] = number
   end
 
+  # Get information about board from browser
   def get_board_info
     for i in 0...9
       for j in 0...9
@@ -45,6 +58,10 @@ class SudokuSolverBot
     end
   end
 
+
+  # Hack function - not to loose focus
+  # Params
+  # +element+:: element to be clicked
   def fill_focus( element)
     @driver.find_element(:xpath, element).click
     sleep(0.08)
@@ -54,7 +71,7 @@ class SudokuSolverBot
     sleep(0.08)
   end
 
-
+  # Fill board with numbers
   def fill_blank_spaces
     for i in 0...9
       for j in 0...9
@@ -70,6 +87,9 @@ class SudokuSolverBot
     end
   end
 
+  # Main game loop
+  # Params
+  # +number_of_solutions+:: how any games to play
   def solve_loop(number_of_solutions)
     for i in 0...number_of_solutions
       sleep(1)  # solving MaxRetriesException
@@ -85,12 +105,14 @@ class SudokuSolverBot
       @dont_click_list = []  # reseting list
       sleep(3)  # without this line sometimes program gets wrong board, how to solve?
       get_board_info
-      File.open("boardinfo.txt", 'w') { |file| file.write(@board) }
+      File.open("boardinfo.txt", 'w') do |file|
+        file.flock(File::LOCK_EX)
+        file.write(@board)
+      end
       `python sudokusolver.py`
       @board = eval(File.read("boardresult.txt"))
       fill_blank_spaces
       sleep(0.5)
-      puts "SCREENSHOT"
       @driver.save_screenshot("screenshot.png")
       sleep(4)  # waiting until score updates (can do this by constantly checking score)
 

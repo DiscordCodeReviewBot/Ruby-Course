@@ -1,12 +1,16 @@
-
+# class which keeps informations about accounts
 class InformationManager
   attr_reader :accounts
+  # Initialize empty list
   def initialize
     @accounts = [
-        ['binq', 'marcin1234'],
     ]
   end
 
+  # Add new user to list
+  # Params
+  # +username+:: bots username
+  # +password+:: bots password
   def add_new_user(username, password)
     @accounts.each do |tup|
       if tup[0] ==  username
@@ -17,6 +21,9 @@ class InformationManager
     print(@accounts)
   end
 
+  # Delete user from list
+  # Params
+  # +username+:: bots username
   def delete_user(username)
     @accounts.each do |tup|
       if tup[0] ==  username
@@ -27,6 +34,7 @@ class InformationManager
   end
 end
 
+# Creates new instance of InformationManager or loads it from file
 def create_information_manager
   if !File.file?("data.txt")
     info_manager = InformationManager.new
@@ -37,6 +45,7 @@ def create_information_manager
   info_manager
 end
 
+# Saves InformationManager instance to file
 def serialize(info_manager)
   File.open("data.txt","wb") do |file|
     Marshal.dump(info_manager,file)
