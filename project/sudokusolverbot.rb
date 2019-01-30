@@ -5,6 +5,7 @@ class SudokuSolverBot
   def initialize(username, password)
     options = Selenium::WebDriver::Chrome::Options.new
     #options.add_argument('--headless')
+    options.add_argument("--window-size=1325x744")
     @driver = Selenium::WebDriver.for :chrome, options: options
     @board = Array.new(9) { Array.new(9,"-")}
     @username = username
@@ -20,6 +21,7 @@ class SudokuSolverBot
     @driver.find_element(:xpath,"//input[@id='login_name']").send_keys(@username)
     @driver.find_element(:xpath,"//input[@id='member_password']").send_keys(@password)
     @driver.find_element(:xpath,"//input[@value='Log In']").click
+    @driver.save_screenshot("screenshot.png")
   end
 
   def add_to_board(column, row, number)

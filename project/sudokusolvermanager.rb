@@ -3,11 +3,8 @@ require 'thread'
 
 class Manager
 
-  def initialize
-    @bots_data = [
-        ['binq', 'marcin1234'],
-        ['binq661', 'fyq6hr84']
-    ]
+  def initialize(data)
+    @bots_data = data
     @bots_list = []
 
     for tup in @bots_data
@@ -26,10 +23,13 @@ class Manager
 
   def bot_manager_start(number_of_solutions)
     for i in 0...@bots_data.length
-      Thread.new(start_bot(i, number_of_solutions))
+      start_bot(i, number_of_solutions)
     end
   end
 end
 
-manager = Manager.new
-manager.bot_manager_start(1)
+def start_manager(data, count)
+  manager = Manager.new(data)
+  manager.bot_manager_start(count)
+end
+
