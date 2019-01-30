@@ -21,7 +21,6 @@ class SudokuSolverBot
     @driver.find_element(:xpath,"//input[@id='login_name']").send_keys(@username)
     @driver.find_element(:xpath,"//input[@id='member_password']").send_keys(@password)
     @driver.find_element(:xpath,"//input[@value='Log In']").click
-    @driver.save_screenshot("screenshot.png")
   end
 
   def add_to_board(column, row, number)
@@ -94,7 +93,9 @@ class SudokuSolverBot
       #print("{} Etap IV".format(self.username))
       fill_blank_spaces
       #print("{} Etap V".format(self.username))
-      sleep(5)  # waiting until score updates (can do this by constantly checking score)
+      sleep(0.5)
+      @driver.save_screenshot("screenshot.png")
+      sleep(4)  # waiting until score updates (can do this by constantly checking score)
       #print("Bot {} completed task".format(self.username))
     end
   end

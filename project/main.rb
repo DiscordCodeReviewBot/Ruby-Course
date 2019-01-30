@@ -1,6 +1,7 @@
 require 'tk'
 require './sudokusolvermanager'
 require "./informationManager"
+require 'thread'
 
 class MyGui
 
@@ -19,7 +20,7 @@ class MyGui
 
     @menu_start.add('cascade', :menu => @start, :label => 'Start')
     @start.add('command', :label => 'New Game',
-                  :command => proc { start_manager(@InfoManager.accounts, 1)})
+                  :command => proc { Thread.new{start_manager(@InfoManager.accounts, 3)}})
     @start.add('command', :label => 'Add New User',
                :command => proc { add_new_user_create_gui})
 
@@ -54,3 +55,4 @@ class MyGui
 end
 
 mygui = MyGui.new
+Thread.new{mygui}
