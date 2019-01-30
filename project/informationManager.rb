@@ -5,7 +5,6 @@ class InformationManager
   def initialize
     @accounts = [
         ['binq', 'marcin1234'],
-        ['binq', 'marcin1234']
     ]
   end
 

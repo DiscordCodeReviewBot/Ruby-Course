@@ -16,22 +16,21 @@ class Manager
   def start_bot(bot_number, number_of_solutions)
     bot = @bots_list[bot_number]
     bot.log_in
-    #sleep(2)  # solving MaxRetriesException
-   # bot.solve_loop(number_of_solutions)
-    #bot.driver.close
+    sleep(2)  # solving MaxRetriesException
+    bot.solve_loop(number_of_solutions)
+    bot.driver.close
   end
 
   def bot_manager_start(number_of_solutions)
-    @threads = []
     for i in 0...@bots_data.length
-      @threads << Thread.new{start_bot(i, number_of_solutions)}
+      Thread.new{start_bot(i, number_of_solutions)}
+      sleep(3)
     end
-    @threads.each{|t| t.join}
   end
 end
 
 def start_manager(data, count)
   manager = Manager.new(data)
-  Thread.new{manager.bot_manager_start(count)}
+  manager.bot_manager_start(count)
 end
 
