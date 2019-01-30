@@ -51,6 +51,7 @@ class SudokuSolverBot
     @driver.find_element(:xpath, element).click
     sleep(0.08)
     @driver.find_element(:xpath, element).click
+    sleep(0.08)
   end
 
 
@@ -81,22 +82,18 @@ class SudokuSolverBot
 
       sleep(5)
       @driver.find_element(:xpath, "//div[@id='g4']").click
-      #print("{} Etap I".format(self.username))
       @dont_click_list = []  # reseting list
-      #print("{} Etap II".format(self.username))
       sleep(3)  # without this line sometimes program gets wrong board, how to solve?
       get_board_info
-      #print("{} Etap III".format(self.username))
       File.open("boardinfo.txt", 'w') { |file| file.write(@board) }
       `python sudokusolver.py`
       @board = eval(File.read("boardresult.txt"))
-      #print("{} Etap IV".format(self.username))
       fill_blank_spaces
-      #print("{} Etap V".format(self.username))
       sleep(0.5)
+      puts "SCREENSHOT"
       @driver.save_screenshot("screenshot.png")
       sleep(4)  # waiting until score updates (can do this by constantly checking score)
-      #print("Bot {} completed task".format(self.username))
+
     end
   end
 end
